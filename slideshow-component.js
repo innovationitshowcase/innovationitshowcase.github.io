@@ -3,38 +3,51 @@ import { Project } from './Project.js';
 function createCard(project) {
     const div = document.createElement('div');
     div.classList.add('card');
+
     div.innerHTML = `
-        <h3 class="card-title">
-            ${project.projectTitle} — ${project.author}
-        </h3>
-        <img src="Wallpaper.png" style="width:200px">
+        <div class="card-content">
+            <div class="card-text">
+            <h2>${project.projectTitle}</h2>
+            <p class="author">By ${project.author}</p>
+            </div>
+
+            <div class="thumbnail-wrapper">
+            <img src="${project.thumbnailPath}" class="thumbnail" alt="">
+            </div>
+        </div>
     `;
+
     return div;
 }
 
-// TODO: automatically generate array from excel data
 const projects = [
-    new Project("gunship on crack", "alice", "https://www.youtube.com/"),
-    new Project("paper mache computer", "bob", "https://www.youtube.com/"),
-    new Project("irl death note", "charlie", "https://www.youtube.com/"),
-    new Project("java cat", "david", "https://www.youtube.com/"),
-    new Project("jumping a fence", "edgar", "https://www.youtube.com/"),
-    new Project("virtual insanity", "felix", "https://www.youtube.com/"),
-    new Project("headphones", "greg", "https://www.youtube.com/"),
-    new Project("java drink", "jeffrey", "https://www.youtube.com/"),
+    new Project("Gunship on Crack", "Alice", "https://www.youtube.com/watch?v=nIWZfhpnq6M"),
+    new Project("Paper Mache Computer", "Bob", "https://www.youtube.com/watch?v=nIWZfhpnq6M"),
+    new Project("IRL Death Note", "Charlie", "https://www.youtube.com/watch?v=nIWZfhpnq6M"),
+    new Project("Java Cat", "David", "https://www.youtube.com/watch?v=nIWZfhpnq6M"),
+    new Project("Jumping a Fence", "Edgar", "https://www.youtube.com/watch?v=nIWZfhpnq6M"),
+    new Project("Virtual Insanity", "Felix", "https://www.youtube.com/watch?v=nIWZfhpnq6M"),
+    new Project("HeadpShones", "Greg", "https://www.youtube.com/watch?v=nIWZfhpnq6M"),
+    new Project("Java Drink", "Jeffrey", "https://www.youtube.com/watch?v=nIWZfhpnq6M")
 ];
 
 const display = document.getElementById('display');
-const PROJECTS_PER_PAGE = 4, TOTAL_PAGES = projects.length / PROJECTS_PER_PAGE;
+const PROJECTS_PER_PAGE = 4;
+const TOTAL_PAGES = Math.ceil(projects.length / PROJECTS_PER_PAGE);
+
 let page = 0;
 
-window.setInterval(() => {
+function renderPage() {
     display.innerHTML = '';
-    for (let i = 0; i < PROJECTS_PER_PAGE && i < projects.length; i++) {
-        const card = createCard(projects[page * PROJECTS_PER_PAGE + i]);
-        display.appendChild(card);
+
+    for (let i = 0; i < PROJECTS_PER_PAGE; i++) {
+        const index = page * PROJECTS_PER_PAGE + i;
+        if (index >= projects.length) break;
+        display.appendChild(createCard(projects[index]));
     }
-    if (++page == TOTAL_PAGES) {
-        page = 0;
-    }
-}, 10000);
+
+    page = (page + 1) % TOTAL_PAGES;
+}
+
+renderPage();
+setInterval(renderPage, 10000);
